@@ -1,16 +1,52 @@
-# React + Vite
+# Cryptid Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack application for tracking, logging, and analyzing sightings of various cryptids (Bigfoot, Mothman, etc.). This project was developed to demonstrate database management, many-to-many relationships, and explicit transaction handling using Flask-SQLAlchemy and SQLite.
 
-Currently, two official plugins are available:
+## Tech Stack
+- **Frontend:** React.js, CSS3
+- **Backend:** Python, Flask, Flask-CORS
+- **Database:** SQLite
+- **ORM:** SQLAlchemy
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Getting Started
 
-## React Compiler
+### Prerequisites
+- Python 3.x
+- Node.js & npm
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Backend Setup
+1. Navigate to the `backend` directory.
+2. Install dependencies:
+   ```bash
+   pip install flask flask-sqlalchemy flask-cors
+3. Run the application
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Database Architecture & Transactions
+
+### 1. Entity-Relationship Design
+- **Cryptid Table:** Stores the master list of creatures.
+- **Sighting Table:** Stores specific encounter data (date, location, credibility score).
+- **EvidenceType Table:** A lookup table for types of proof (e.g., "Blurry Photo", "Footprint Cast").
+- **SightingEvidence:** Facilitates a **Many-to-Many** relationship between Sightings and EvidenceTypes.
+
+### 2. Transaction Management (ACID)
+To ensure **Atomicity**, the application utilizes explicit SQLAlchemy session blocks (`with db.session.begin():`). This ensures that the all actions of one interaction are treated as a single operation. If any part of the process fails (e.g., a database constraint violation), the entire transaction is rolled back, preventing half-finished entries from entering the table.
+
+### 3. Concurrency & Isolation Levels
+The backend is engineered for multi-user safety:
+- **Transaction Mode:** The app executes `BEGIN IMMEDIATE` at the start of write operations. This overrides SQLite’s default deferred locking, acquiring a write lock before writing to any table.
+- **Busy Timeout:** A `PRAGMA busy_timeout = 5000` is implemented. This instructs SQLite to wait for up to 5 seconds for a lock to clear before returning an error, so that user B has can actually commence after user A without crashing.
+- **Isolation Level:** The application operates under a **Serializable** isolation level via SQLite's locking mechanism, ensuring the highest degree of data consistency and preventing phantom reads or race conditions.
+
+---
+
+## Features
+- **Dynamic Sighting Logs:** Users can select existing cryptids or add a new creature directly from the reporting form.
+- **Data Integrity:** Backend validation prevents duplicate cryptid entries and ensures dates are not in the future.
+- **Advanced Filtering:** The Intelligence Report allows users to filter the database by date range, specific cryptid, and minimum credibility score.
+- **Intelligence Dashboard:** Automatically calculates total records, average credibility, the most spotted cryptid, and the most common type of evidence.
+- **Full CRUD Support:** Users can create new records, read/filter existing ones, update sightings (including evidence types), and delete records.
+
+---
