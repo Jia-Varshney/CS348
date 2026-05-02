@@ -85,7 +85,7 @@ def add_sighting():
         with db.session.begin(): 
             # backoff and retry strategy, user B will wait for user A to finish
             db.session.execute(text("PRAGMA busy_timeout = 5000"))          
-            db.session.execute(text('BEGIN IMMEDIATE')) # get exclusive lock  
+            db.session.execute(text('BEGIN IMMEDIATE')) # get write lock  
             if cryptid_id_raw == 'new':
                 # Check if the cryptid already exists in the database
                 existing_cryptid = Cryptid.query.filter_by(name=new_cryptid_name).first()
