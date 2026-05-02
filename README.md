@@ -14,12 +14,22 @@ A full-stack application for tracking, logging, and analyzing sightings of vario
 - Python 3.x
 - Node.js & npm
 
+### Frontend Setup
+1. Install dependencies:
+   ```bash
+   npm install
+3. Run the application
+   ```bash
+   npm run dev
+
 ### Backend Setup
 1. Navigate to the `backend` directory.
 2. Install dependencies:
    ```bash
    pip install flask flask-sqlalchemy flask-cors
 3. Run the application
+   ```bash
+   python app.py
 
 ---
 
@@ -50,3 +60,6 @@ The backend is engineered for multi-user safety:
 - **Full CRUD Support:** Users can create new records, read/filter existing ones, update sightings (including evidence types), and delete records.
 
 ---
+
+## AI Use
+I used Gemini for debugging purposes. After writing my own code, I would submit it to Gemini if I did not understand the errors. After submitting my code, I would ask questions until I understood its offered solution or find my own solution if its response was odd or incorrect.
