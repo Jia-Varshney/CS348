@@ -47,7 +47,7 @@ To ensure **Atomicity**, the application utilizes explicit SQLAlchemy session bl
 ### 3. Concurrency & Isolation Levels
 The backend is engineered for multi-user safety:
 - **Transaction Mode:** The app executes `BEGIN IMMEDIATE` at the start of write operations. This overrides SQLite’s default deferred locking, acquiring a write lock before writing to any table.
-- **Busy Timeout:** A `PRAGMA busy_timeout = 5000` is implemented. This instructs SQLite to wait for up to 5 seconds for a lock to clear before returning an error, so that user B has can actually commence after user A without crashing.
+- **Busy Timeout:** A `PRAGMA busy_timeout = 5000` is implemented. This instructs SQLite to wait for up to 5 seconds for a lock to clear before returning an error, so that user B has can actually commence after user A rather than immediately crashing.
 - **Isolation Level:** The application operates under a **Serializable** isolation level via SQLite's locking mechanism, ensuring the highest degree of data consistency and preventing phantom reads or race conditions.
 
 ---
